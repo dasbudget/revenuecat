@@ -49,7 +49,7 @@ func (c *Client) call(method, path string, reqBody interface{}, platform string,
 	req.Header.Add("Authorization", "Bearer "+c.apiKey)
 	req.Header.Add("Content-Type", "application/json")
 	if platform != "" {
-		req.Header.Add("X-Platform", "ios")
+		req.Header.Add("X-Platform", platform)
 	}
 
 	resp, err := c.http.Do(req)
