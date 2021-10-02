@@ -44,6 +44,6 @@ func (c *Client) GetOfferings(userID, platform string) ([]Offering, string, erro
 		Offerings         []Offering `json:"offerings"`
 	}{}
 
-	err := c.call(http.MethodGet, fmt.Sprintf("subscribers/%s/offerings", userID), nil, platform, &resp)
+	err := c.do(http.MethodGet, fmt.Sprintf("subscribers/%s/offerings", userID), nil, platform, &resp, true)
 	return resp.Offerings, resp.CurrentOfferingId, err
 }
