@@ -94,7 +94,7 @@ func (c *Client) GetSubscriberWithPlatform(userID string, platform string) (Subs
 	var resp struct {
 		Subscriber Subscriber `json:"subscriber"`
 	}
-	err := c.call("GET", "subscribers/"+userID, nil, platform, &resp)
+	err := c.do("GET", "subscribers/"+userID, nil, platform, &resp, true)
 	return resp.Subscriber, err
 }
 
