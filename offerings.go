@@ -5,11 +5,6 @@ import (
 	"net/http"
 )
 
-type Package struct {
-	Identifier                string `json:"identifier"`
-	PlatformProductIdentifier string `json:"platform_product_identifier"`
-}
-
 type Offering struct {
 	Description string    `json:"description"`
 	Identifier  string    `json:"identifier"`
