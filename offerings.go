@@ -6,6 +6,7 @@ import (
 )
 
 type Offering struct {
+	ID          string    `json:"id,omitempty"`
 	Description string    `json:"description"`
 	Identifier  string    `json:"identifier"`
 	Packages    []Package `json:"packages"`
@@ -41,4 +42,10 @@ func (c *Client) GetOfferings(userID, platform string) ([]Offering, string, erro
 
 	err := c.do(http.MethodGet, fmt.Sprintf("subscribers/%s/offerings", userID), nil, platform, &resp, true)
 	return resp.Offerings, resp.CurrentOfferingId, err
+}
+
+func (c *Client) GetAllOfferings(appID string) ([]Offering, error) {
+	var resp []Offering
+	err := c.call("GET", fmt.Sprintf("developers/me/apps/%s/new_offerings", appID), nil, "", &resp)
+	return resp, err
 }
