@@ -7,9 +7,10 @@ import (
 
 type Offering struct {
 	ID          string    `json:"id,omitempty"`
-	Description string    `json:"description"`
+	Description string    `json:"description,omitempty"`
+	DisplayName string    `json:"display_name,omitempty"`
 	Identifier  string    `json:"identifier"`
-	Packages    []Package `json:"packages"`
+	Packages    []Package `json:"packages,omitempty"`
 }
 
 // OverrideOffering overrides the current Offering for a specific user.
@@ -47,5 +48,11 @@ func (c *Client) GetOfferings(userID, platform string) ([]Offering, string, erro
 func (c *Client) GetAllOfferings(appID string) ([]Offering, error) {
 	var resp []Offering
 	err := c.call("GET", fmt.Sprintf("developers/me/apps/%s/new_offerings", appID), nil, "", &resp)
+	return resp, err
+}
+
+func (c *Client) CreateOffering(appID string, offering *Offering) (Offering, error) {
+	var resp Offering
+	err := c.call("POST", fmt.Sprintf("developers/me/apps/%s/new_offerings", appID), offering, "", &resp)
 	return resp, err
 }
