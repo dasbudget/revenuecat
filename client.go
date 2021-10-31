@@ -58,6 +58,7 @@ func (c *Client) do(method, path string, reqBody interface{}, platform string, r
 
 	if strings.Contains(path, "developers/me/") {
 		req.Header.Add("Cookie", c.cookie)
+		req.Header.Add("X-Requested-With", "XMLHttpRequest")
 	} else {
 		auth := "Bearer " + c.apiKey
 		if public {
