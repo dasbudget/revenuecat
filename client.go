@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -13,6 +14,7 @@ import (
 type Client struct {
 	apiKey    string
 	publicKey string
+	cookie    string
 	apiURL    string
 	http      doer
 }
@@ -23,7 +25,7 @@ type doer interface {
 
 // New returns a new *Client for the provided API key.
 // For more information on authentication, see https://docs.revenuecat.com/docs/authentication.
-func New(apiKey, publicKey string, client *http.Client) *Client {
+func New(apiKey, publicKey, cookie string, client *http.Client) *Client {
 	if client == nil {
 		client = &http.Client{
 			// Set a long timeout here since calls to Apple are probably invloved.
@@ -36,6 +38,7 @@ func New(apiKey, publicKey string, client *http.Client) *Client {
 		publicKey: publicKey,
 		apiURL:    "https://api.revenuecat.com/v1/",
 		http:      client,
+		cookie:    cookie,
 	}
 }
 
@@ -53,11 +56,15 @@ func (c *Client) do(method, path string, reqBody interface{}, platform string, r
 		return fmt.Errorf("error creating request: %v", err)
 	}
 
-	auth := "Bearer " + c.apiKey
-	if public {
-		auth = "Bearer " + c.publicKey
+	if strings.Contains(path, "developers/me/") {
+		req.Header.Add("Cookie", c.cookie)
+	} else {
+		auth := "Bearer " + c.apiKey
+		if public {
+			auth = "Bearer " + c.publicKey
+		}
+		req.Header.Add("Authorization", auth)
 	}
-	req.Header.Add("Authorization", auth)
 	req.Header.Add("Content-Type", "application/json")
 	if platform != "" {
 		req.Header.Add("X-Platform", platform)
